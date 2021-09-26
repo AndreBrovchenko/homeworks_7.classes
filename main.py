@@ -67,8 +67,42 @@ class CookBook:
         return self.amount_ingredients
 
 
+def write_sorted_files(list_files, out_files):
+    """
+    Opens files in a list, counts the number of lines in the file.
+    The result of calculations is placed in a dictionary, the key is the file name,
+    the value is the number of lines in the file.
+    The contents of the source files are written to the resulting file in the order
+    of increasing number of lines in them.
+    :param list_files: Source files list
+    :param out_files:  The resulting file
+    :return: A file containing information from all source data
+    """
+    data_files = dict()
+    for files in list_files:
+        with open(files) as files_read:
+            lines = files_read.readlines()
+            data_files[files_read.name] = len(lines)
+    data_files_sorted = list(data_files.items())
+    data_files_sorted.sort(key=lambda i: i[1])
+
+    with open(out_files, 'w') as files_out:
+        pass
+    with open(out_files, 'a') as files_out:
+        for item in data_files_sorted:
+            with open(item[0]) as file_in:
+                files_out.write(str(item[0]) + '\n')
+                files_out.write(str(item[1]) + '\n')
+                for line in file_in:
+                    files_out.write(line.strip() + '\n')
+
+    return data_files_sorted
+
+
 best_cookbook = CookBook('recipes.txt')
 pprint(best_cookbook.cook_book)
 
 # pprint(best_cookbook.getingredients(['Омлет', 'Фахитос'], 2))
 pprint(best_cookbook.getingredients(['Запеченный картофель', 'Омлет'], 2))
+
+print(write_sorted_files(['1.txt', '2.txt', '3.txt'], 'out.txt'))
